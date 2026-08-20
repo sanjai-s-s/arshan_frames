@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Frame — Arshan Frame</title>
+<meta name="description" content="Choose your frame, colour and size, upload your photo, and see it live before you order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="configurator.css">
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">Arshan Frame</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#frames">Frames</a>
+      <a href="index.html#how-it-works">How it works</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav-progress" aria-hidden="true">
+      <span class="step-dot done"></span>
+      <span class="step-dot active"></span>
+      <span class="step-dot"></span>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main class="configurator" id="configurator">
+  <div class="container config-grid">
+
+    <!-- LEFT: Live Preview -->
+    <div class="preview-col">
+      <div class="preview-stage" id="previewStage">
+        <div class="scene-layer active" id="sceneLayerA" data-layer="a"></div>
+        <div class="scene-layer" id="sceneLayerB" data-layer="b"></div>
+        <div class="preview-scene-label" id="sceneLabel">Medium &middot; Walnut</div>
+
+        <div class="wall-shadow" id="wallShadow" aria-hidden="true"></div>
+
+        <div class="frame-mock" id="previewFrame" data-colour="walnut" data-size="medium" data-mode="wall">
+          <div class="frame-photo-wrap" id="photoWrap">
+            <img id="previewPhoto" class="preview-photo" alt="" hidden>
+            <div class="upload-placeholder" id="uploadPlaceholder">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M12 16V4M12 4l-4 4M12 4l4 4"/>
+                <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+              </svg>
+              <span>Your photo will appear here</span>
+            </div>
+            <div class="glass-reflection" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-switch">
+        <button class="mode-btn" id="closeupToggle" type="button" aria-pressed="false">Close-up</button>
+      </div>
+
+      <div class="placement-panel" id="placementPanel">
+        <span class="placement-size" id="placementSize">Medium</span>
+        <span class="placement-text" id="placementText">Perfect for bedrooms and hallways.</span>
+      </div>
+
+      <label class="upload-drop" id="uploadDrop" for="photoInput">
+        <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" hidden>
+        <span class="upload-icon">＋</span>
+        <span class="upload-text">
+          <strong id="uploadLabel">Upload your photo</strong>
+          <small>JPG, PNG or WEBP · up to 10MB</small>
+        </span>
+      </label>
+      <p class="upload-error" id="uploadError" role="alert" hidden></p>
+    </div>
+
+    <!-- RIGHT: Configurator controls -->
+    <div class="options-col">
+      <span class="eyebrow">Step 2 of 3</span>
+      <h1>Build your frame</h1>
+      <p class="config-sub">Every choice updates the preview on the left, instantly.</p>
+
+      <!-- Frame selection -->
+      <fieldset class="option-group">
+        <legend>Frame</legend>
+        <div class="frame-options" id="frameOptions">
+          <button class="frame-option active" data-frame="gallery" type="button">
+            <span class="fo-name">The Gallery</span>
+            <span class="fo-desc">Slim profile, solid wood</span>
+            <span class="fo-price">From ₹899</span>
+          </button>
+          <button class="frame-option" data-frame="studio" type="button">
+            <span class="fo-name">The Studio</span>
+            <span class="fo-desc">Deeper box, matte border</span>
+            <span class="fo-price">From ₹1,299</span>
+          </button>
+        </div>
+      </fieldset>
+
+      <!-- Colour selection -->
+      <fieldset class="option-group">
+        <legend>Colour</legend>
+        <div class="colour-options" id="colourOptions">
+          <button class="colour-option active" data-colour="walnut" type="button" aria-label="Walnut" style="--swatch:#3b2a20;"></button>
+          <button class="colour-option" data-colour="oak" type="button" aria-label="Oak" style="--swatch:#c9a978;"></button>
+          <button class="colour-option" data-colour="black" type="button" aria-label="Black" style="--swatch:#161616;"></button>
+        </div>
+        <span class="option-value" id="colourValue">Walnut</span>
+      </fieldset>
+
+      <!-- Size selection -->
+      <fieldset class="option-group">
+        <legend>Size</legend>
+        <div class="size-options" id="sizeOptions">
+          <button class="size-option" data-size="small" type="button">
+            <span class="so-name">Small</span>
+            <span class="so-dim">8&Prime; × 10&Prime;</span>
+          </button>
+          <button class="size-option active" data-size="medium" type="button">
+            <span class="so-name">Medium</span>
+            <span class="so-dim">12&Prime; × 16&Prime;</span>
+          </button>
+          <button class="size-option" data-size="large" type="button">
+            <span class="so-name">Large</span>
+            <span class="so-dim">16&Prime; × 20&Prime;</span>
+          </button>
+        </div>
+      </fieldset>
+
+      <!-- Quantity -->
+      <fieldset class="option-group">
+        <legend>Quantity</legend>
+        <div class="qty-control">
+          <button type="button" id="qtyMinus" aria-label="Decrease quantity">&minus;</button>
+          <span id="qtyValue">1</span>
+          <button type="button" id="qtyPlus" aria-label="Increase quantity">+</button>
+        </div>
+      </fieldset>
+
+      <!-- Order summary -->
+      <div class="order-summary" id="orderSummary">
+        <h2>Order summary</h2>
+        <dl class="summary-row">
+          <dt>Frame</dt><dd id="sumFrame">The Gallery</dd>
+        </dl>
+        <dl class="summary-row">
+          <dt>Colour</dt><dd id="sumColour">Walnut</dd>
+        </dl>
+        <dl class="summary-row">
+          <dt>Size</dt><dd id="sumSize">Medium · 12&Prime; × 16&Prime;</dd>
+        </dl>
+        <dl class="summary-row">
+          <dt>Quantity</dt><dd id="sumQty">1</dd>
+        </dl>
+        <dl class="summary-row">
+          <dt>Photo</dt><dd id="sumPhoto">Not uploaded</dd>
+        </dl>
+        <div class="summary-divider"></div>
+        <dl class="summary-row total">
+          <dt>Total</dt><dd id="sumTotal">₹899</dd>
+        </dl>
+      </div>
+
+      <button class="btn-continue" id="continueBtn" disabled>
+        <span>Continue to your details</span>
+        <span class="arrow">&rarr;</span>
+      </button>
+      <p class="continue-hint" id="continueHint">Upload a photo to continue</p>
+    </div>
+
+  </div>
+</main>
+
+<script src="configurator.js"></script>
+  <script src="nav.js"></script>
+</body>
+</html>
