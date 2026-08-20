@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Details — Cadre</title>
+<meta name="description" content="Tell us where to send your frame.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="configurator.css">
+<link rel="stylesheet" href="order-flow.css">
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">Cadre</a>
+    <nav class="nav-links">
+      <a href="index.html#frames">Frames</a>
+      <a href="index.html#how-it-works">How it works</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav-progress" aria-hidden="true">
+      <span class="step-dot done"></span>
+      <span class="step-dot done"></span>
+      <span class="step-dot active"></span>
+      <span class="step-dot"></span>
+    </div>
+  </div>
+</header>
+
+<main class="order-flow">
+  <div class="container flow-grid">
+
+    <div class="flow-main">
+      <span class="eyebrow">Step 3 of 4</span>
+      <h1>Your details</h1>
+      <p class="config-sub">We'll use this to ship your frame and keep you posted on your order.</p>
+
+      <form id="detailsForm" novalidate>
+
+        <div class="field float-field">
+          <input type="text" id="fullName" name="fullName" autocomplete="name" placeholder=" " required>
+          <label for="fullName">Full name</label>
+          <span class="field-error" id="err-fullName"></span>
+        </div>
+
+        <div class="field-row">
+          <div class="field float-field">
+            <input type="tel" id="mobile" name="mobile" autocomplete="tel" inputmode="numeric" placeholder=" " required>
+            <label for="mobile">Mobile number</label>
+            <span class="field-error" id="err-mobile"></span>
+          </div>
+          <div class="field float-field">
+            <input type="email" id="email" name="email" autocomplete="email" placeholder=" ">
+            <label for="email">Email <span class="optional">(optional)</span></label>
+            <span class="field-error" id="err-email"></span>
+          </div>
+        </div>
+
+        <div class="field float-field">
+          <textarea id="address" name="address" rows="3" placeholder=" " required></textarea>
+          <label for="address">Address</label>
+          <span class="field-error" id="err-address"></span>
+        </div>
+
+        <div class="field-row">
+          <div class="field float-field">
+            <input type="text" id="city" name="city" autocomplete="address-level2" placeholder=" " required>
+            <label for="city">City</label>
+            <span class="field-error" id="err-city"></span>
+          </div>
+          <div class="field float-field">
+            <input type="text" id="state" name="state" autocomplete="address-level1" placeholder=" " required>
+            <label for="state">State</label>
+            <span class="field-error" id="err-state"></span>
+          </div>
+          <div class="field float-field field-narrow">
+            <input type="text" id="pincode" name="pincode" autocomplete="postal-code" inputmode="numeric" placeholder=" " required>
+            <label for="pincode">Pincode</label>
+            <span class="field-error" id="err-pincode"></span>
+          </div>
+        </div>
+
+        <div class="field float-field">
+          <textarea id="notes" name="notes" rows="2" placeholder=" "></textarea>
+          <label for="notes">Additional notes <span class="optional">(optional)</span></label>
+        </div>
+
+        <button type="submit" class="btn-continue" id="detailsContinue">
+          <span>Continue to checkout</span>
+          <span class="arrow">&rarr;</span>
+        </button>
+        <p class="continue-hint"><a href="configurator.html" class="back-link">&larr; Back to frame options</a></p>
+      </form>
+    </div>
+
+    <aside class="flow-side">
+      <div class="order-summary" id="miniSummary">
+        <h2>Your order</h2>
+        <div id="miniSummaryBody">
+          <p class="empty-note">No order found. <a href="configurator.html">Start building your frame</a>.</p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<script src="order-flow.js"></script>
+<script src="customer-details.js"></script>
+</body>
+</html>

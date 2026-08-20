@@ -1,0 +1,541 @@
+:root{
+  --bg:#FFFFFF;
+  --bg-secondary:#F8F8F6;
+  --card:#EFEFEF;
+  --text:#111111;
+  --text-secondary:#666666;
+  --border:#D9D9D9;
+  --btn:#1A1A1A;
+  --btn-hover:#333333;
+  --serif:'Cormorant Garamond', serif;
+  --sans:'Inter', sans-serif;
+  --success:#2e6b3e;
+  --error:#a5312c;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--sans);
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;background:none;color:inherit;}
+fieldset{border:none;}
+legend{padding:0;}
+:focus-visible{outline:2px solid var(--text); outline-offset:3px;}
+
+.container{max-width:1180px; margin:0 auto; padding:0 24px;}
+
+h1,h2{font-family:var(--serif); font-weight:500; letter-spacing:0.01em;}
+
+.eyebrow{
+  font-family:var(--sans);
+  font-size:12px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--text-secondary);
+  font-weight:500;
+}
+
+/* ---------- Nav ---------- */
+header.nav{
+  position:sticky; top:0; z-index:100;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between; height:72px;
+}
+.logo{font-family:var(--serif); font-size:24px; font-weight:600;}
+.nav-links{display:flex; gap:32px;}
+.nav-links a{font-size:14px; color:var(--text-secondary); transition:color .2s ease;}
+.nav-links a:hover{color:var(--text);}
+.nav-progress{display:flex; gap:8px;}
+.step-dot{width:7px; height:7px; border-radius:50%; background:var(--border);}
+.step-dot.done{background:var(--text); opacity:.5;}
+.step-dot.active{background:var(--text); transform:scale(1.3);}
+
+/* Hidden at desktop, where .nav-links is already inline. */
+.nav-toggle{display:none;}
+
+/* ---------- Mobile navigation (<=760px) ----------
+   .nav-links was display:none here with no replacement, so the nav links
+   were unreachable on every phone. It now becomes a panel opened by
+   .nav-toggle. Desktop is untouched: everything is inside this query. */
+@media (max-width:760px){
+  .nav-toggle{
+    display:block; position:relative; width:44px; height:44px;
+    flex:0 0 44px; margin-right:-10px; background:none; border:0; cursor:pointer;
+  }
+  /* Bars stay 22x16 visually; the 44px box is just the touch target. */
+  .nav-toggle span{
+    position:absolute; left:11px; width:22px; height:1.5px;
+    background:var(--text); transition:transform .25s cubic-bezier(0.22,1,0.36,1), opacity .2s ease;
+  }
+  .nav-toggle span:nth-child(1){top:14px;}
+  .nav-toggle span:nth-child(2){top:21px;}
+  .nav-toggle span:nth-child(3){top:28px;}
+  .nav-toggle.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle.is-open span:nth-child(2){opacity:0;}
+  .nav-toggle.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .nav-links{
+    display:block; position:absolute; top:100%; left:0; right:0;
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+    padding-left:max(20px, env(safe-area-inset-left, 0px));
+    padding-right:max(20px, env(safe-area-inset-right, 0px));
+    opacity:0; visibility:hidden; transform:translateY(-8px);
+    transition:opacity .22s ease, transform .22s cubic-bezier(0.22,1,0.36,1), visibility .22s;
+  }
+  .nav-links.is-open{opacity:1; visibility:visible; transform:translateY(0);}
+  /* 44px rows rather than 14px text links. */
+  .nav-links a{
+    display:flex; align-items:center; min-height:48px;
+    font-size:15px; color:var(--text);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-links a:last-child{border-bottom:0;}
+
+  /* Logo is the home link on every page and sat under 44px. The header
+     row is taller than this, so nothing moves. */
+  .logo{display:inline-flex; align-items:center; min-height:44px;}
+}
+
+/* ---------- Layout ---------- */
+.configurator{padding:56px 0 100px;}
+.config-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start;
+}
+
+@media (max-width:960px){
+  .config-grid{grid-template-columns:1fr; gap:48px;}
+}
+
+/* ---------- Preview column ---------- */
+.preview-col{position:sticky; top:96px;}
+@media (max-width:960px){ .preview-col{position:static;} }
+
+.preview-stage{
+  position:relative;
+  background:var(--bg-secondary);
+  border:1px solid var(--border);
+  aspect-ratio:4/5;
+  display:flex; align-items:center; justify-content:center;
+  padding:40px;
+  margin-bottom:22px;
+  overflow:hidden;
+}
+
+/* Match the preview stage to the real asset ratio so the supplied
+   Small/Medium/Large scene images are never cropped or stretched. */
+.preview-stage[data-size="small"],
+.preview-stage[data-size="large"]{aspect-ratio:4/5;}
+.preview-stage[data-size="medium"]{aspect-ratio:3/4;}
+.preview-scene-label{
+  position:absolute; top:16px; left:16px; z-index:4;
+  font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--text-secondary); background:var(--bg); padding:6px 10px; border:1px solid var(--border);
+}
+
+/* Scene background — two stacked layers cross-fade between whichever
+   mode/colour image is current. Only opacity is animated (cheap, GPU). */
+.scene-layer{
+  position:absolute; inset:0; z-index:0;
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+  opacity:0; transition:opacity .7s ease;
+}
+.scene-layer.active{opacity:1;}
+/* Soft ambient light: a gentle vignette/wash rather than a flat tint,
+   so the room reads as naturally lit instead of washed-out. */
+.scene-layer::after{
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(120% 90% at 50% 18%, rgba(255,255,255,0.16), rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.32);
+}
+
+/* ---------- Contact shadows: sell "physically in the room" ---------- */
+.wall-shadow{
+  position:absolute; z-index:1; opacity:0; pointer-events:none;
+  transition:opacity .5s ease;
+}
+.wall-shadow.visible{opacity:1;}
+
+/* Soft diffused cast shadow, offset down-right of the frame, as if a
+   single ambient light source is coming from upper-left. */
+.wall-shadow{
+  left:50%; top:50%;
+  width:var(--frame-shadow-w, 60%); aspect-ratio:1/1.05;
+  transform:translate(calc(-50% + 3%), calc(-50% + 4%));
+  background:radial-gradient(closest-side, rgba(20,16,12,0.22), rgba(20,16,12,0) 72%);
+  filter:blur(6px);
+  transition:opacity .5s ease, width .4s cubic-bezier(0.22,1,0.36,1);
+}
+
+.frame-mock{
+  position:relative;
+  z-index:2;
+  width:66%;
+  background:#3b2a20;
+  padding:20px;
+  border-radius:1px;
+  /* Layered shadow = ambient (broad, soft) + contact (tight, dark) +
+     a faint top highlight, so the frame reads as a physical object
+     with real depth rather than a flat rectangle. */
+  box-shadow:
+    0 44px 70px -30px rgba(0,0,0,0.38),
+    0 14px 24px -14px rgba(0,0,0,0.30),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+  transition:
+    background .4s ease,
+    width .5s cubic-bezier(0.22,1,0.36,1),
+    aspect-ratio .5s cubic-bezier(0.22,1,0.36,1),
+    padding .4s ease,
+    opacity .4s ease,
+    transform .5s cubic-bezier(0.22,1,0.36,1),
+    box-shadow .4s ease;
+}
+
+/* Inner bevel: a light edge top-left, dark edge bottom-right — this is
+   what makes the frame moulding read as having real thickness. */
+.frame-mock::before{
+  content:'';
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 1px 0 0 rgba(255,255,255,0.12),
+    inset 0 -2px 3px rgba(0,0,0,0.35),
+    inset -2px 0 3px rgba(0,0,0,0.22);
+}
+/* A subtle diagonal sheen so wood/matte finishes don't look flat. */
+.frame-mock::after{
+  content:'';
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0.08) 100%);
+  mix-blend-mode:overlay;
+}
+
+.frame-mock[data-colour="walnut"]{background:#3b2a20;}
+.frame-mock[data-colour="oak"]{background:#c9a978;}
+.frame-mock[data-colour="black"]{background:#161616;}
+
+/* Base aspect ratios per size (unchanged proportions of the artwork itself). */
+.frame-mock[data-size="small"]{aspect-ratio:4/5;}
+.frame-mock[data-size="medium"]{aspect-ratio:3/4;}
+.frame-mock[data-size="large"]{aspect-ratio:4/5;}
+
+/* The supplied size-preview assets already contain the physical frame.
+   In Size Preview mode the old CSS frame must not draw a second frame.
+   Keep only a transparent photo layer aligned over the image's built-in
+   photo opening so uploaded photos still work. */
+/* The Small/Medium/Large scene assets photograph a real frame, so the
+   drawn frame is switched off entirely and this element becomes just the
+   photo slot, marked with data-real-frame. Its size and transform are
+   set inline by positionOpening()
+   in configurator.js from the measured opening corners — left/top and
+   transform-origin are pinned here so that maths has a fixed reference. */
+.frame-mock[data-real-frame]{
+  position:absolute;
+  z-index:2;
+  left:0;
+  top:0;
+  padding:0;
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
+  aspect-ratio:auto;
+  transform-origin:0 0;
+}
+/* Bevel and sheen belong to the drawn frame; the photographed one has its
+   own. Leaving these on puts a second highlight over the real moulding. */
+.frame-mock[data-real-frame]::before,
+.frame-mock[data-real-frame]::after{content:none;}
+/* The photo fills the slot exactly: no mat gap, no spill past the edges. */
+.frame-mock[data-real-frame] .frame-photo-wrap{background:transparent;}
+
+
+/* Close-up: a deliberate macro zoom onto the frame's edge and glass —
+   material quality is the whole point of this view. */
+.frame-mock[data-mode="closeup"]{
+  width:92%;
+  transform:scale(1.32);
+  box-shadow:
+    0 30px 50px -20px rgba(0,0,0,0.42),
+    0 6px 14px -6px rgba(0,0,0,0.30),
+    0 1px 0 rgba(255,255,255,0.08) inset;
+}
+
+.frame-mock[data-frame="studio"]{padding:32px;}
+
+/* Brief soft fade+scale dip while a size change is in flight — makes
+   the resize read as one smooth motion instead of a sudden jump. */
+.frame-mock.is-resizing{opacity:.88; transform:scale(0.985);}
+.frame-mock[data-mode="closeup"].is-resizing{transform:scale(1.28);}
+
+.frame-photo-wrap{
+  position:relative; width:100%; height:100%; overflow:hidden; background:#dcdcd6;
+  display:flex; align-items:center; justify-content:center;
+}
+.preview-photo{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity .5s ease;
+}
+.preview-photo.active{opacity:1;}
+
+/* Glass reflection: a soft diagonal sheen sitting above the photo,
+   like light catching the glazing over the print. */
+.glass-reflection{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:linear-gradient(115deg,
+    rgba(255,255,255,0) 38%,
+    rgba(255,255,255,0.16) 48%,
+    rgba(255,255,255,0.05) 58%,
+    rgba(255,255,255,0) 66%);
+  opacity:.7;
+  transition:opacity .4s ease;
+}
+.frame-mock[data-mode="closeup"] .glass-reflection{opacity:1;}
+
+
+.upload-placeholder{
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  color:var(--text-secondary); font-size:13px; text-align:center; padding:20px;
+}
+.frame-mock[data-real-frame] .upload-placeholder{display:none;}
+.upload-placeholder svg{opacity:.6;}
+.upload-placeholder.hidden{display:none;}
+
+/* ---------- Preview control (Close-up) ---------- */
+/* Holds a single Close-up toggle now that the size tabs are gone, so the
+   control hugs its label instead of stretching the full stage width and
+   reading as a second CTA. Was display:flex when it held three tabs. */
+.mode-switch{
+  display:inline-flex; gap:6px; margin-bottom:16px; border:1px solid var(--border);
+  padding:4px; background:var(--bg-secondary);
+}
+.mode-btn{
+  flex:1; padding:10px 8px; font-size:13px; text-align:center; color:var(--text-secondary);
+  transition:background .2s ease, color .2s ease;
+}
+.mode-btn.active{background:var(--bg); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,0.06);}
+.mode-btn:disabled{opacity:.35; cursor:not-allowed;}
+
+/* ---------- Placement info panel ---------- */
+.placement-panel{
+  display:flex; align-items:baseline; gap:10px;
+  border:1px solid var(--border); background:var(--bg-secondary);
+  padding:14px 16px; margin-bottom:22px;
+}
+.placement-size{
+  font-family:var(--serif); font-size:16px; font-weight:600; flex-shrink:0;
+}
+.placement-text{font-size:13.5px; color:var(--text-secondary);}
+
+.upload-drop{
+  display:flex; align-items:center; gap:16px;
+  border:1px dashed var(--border); padding:20px 22px; cursor:pointer;
+  transition:border-color .2s ease, background .2s ease;
+}
+.upload-drop:hover, .upload-drop.dragover{border-color:var(--text); background:var(--bg-secondary);}
+.upload-icon{
+  font-size:20px; width:40px; height:40px; border-radius:50%; background:var(--card);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.upload-text{display:flex; flex-direction:column; gap:2px;}
+.upload-text strong{font-size:14.5px; font-weight:500;}
+.upload-text small{font-size:12.5px; color:var(--text-secondary);}
+.upload-error{color:var(--error); font-size:13px; margin-top:10px;}
+
+/* ---------- Options column ---------- */
+.options-col h1{font-size:clamp(30px,3.4vw,42px); margin:10px 0 8px;}
+.config-sub{color:var(--text-secondary); font-size:15px; margin-bottom:36px;}
+
+.option-group{margin-bottom:32px;}
+.option-group legend{
+  font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-secondary);
+  margin-bottom:14px; display:block; font-weight:500;
+}
+.option-value{
+  display:inline-block; margin-top:10px; font-size:13.5px; color:var(--text-secondary);
+}
+
+.frame-options{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.frame-option{
+  text-align:left; border:1px solid var(--border); padding:18px 18px 16px; background:var(--bg);
+  display:flex; flex-direction:column; gap:4px; transition:border-color .2s ease, background .2s ease, transform .15s ease;
+}
+.frame-option:hover{transform:translateY(-2px);}
+.frame-option.active{border-color:var(--text); background:var(--bg-secondary);}
+.fo-name{font-family:var(--serif); font-size:19px;}
+.fo-desc{font-size:12.5px; color:var(--text-secondary);}
+.fo-price{font-size:12.5px; margin-top:6px; color:var(--text);}
+
+.colour-options{display:flex; gap:12px;}
+.colour-option{
+  width:36px; height:36px; border-radius:50%; background:var(--swatch);
+  border:2px solid transparent; box-shadow:0 0 0 1px var(--border);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.colour-option:hover{transform:translateY(-2px);}
+.colour-option.active{box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--text);}
+
+.size-options{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+.size-option{
+  border:1px solid var(--border); padding:14px 10px; text-align:center; background:var(--bg);
+  display:flex; flex-direction:column; gap:4px; transition:border-color .2s ease, background .2s ease;
+}
+.size-option:hover{border-color:var(--text-secondary);}
+.size-option.active{border-color:var(--text); background:var(--bg-secondary);}
+.so-name{font-size:14px; font-weight:500;}
+.so-dim{font-size:12px; color:var(--text-secondary);}
+
+.qty-control{
+  display:inline-flex; align-items:center; border:1px solid var(--border);
+}
+.qty-control button{
+  width:40px; height:40px; font-size:18px; transition:background .2s ease;
+}
+.qty-control button:hover{background:var(--card);}
+.qty-control span{width:44px; text-align:center; font-size:15px; font-weight:500;}
+
+/* ---------- Order summary ---------- */
+.order-summary{
+  background:var(--bg-secondary); border:1px solid var(--border); padding:26px 24px; margin-bottom:24px;
+}
+.order-summary h2{font-size:19px; margin-bottom:16px; font-family:var(--sans); font-weight:600;}
+.summary-row{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:14px; padding:6px 0; color:var(--text-secondary);
+}
+.summary-row dt{font-weight:400;}
+.summary-row dd{color:var(--text); font-weight:500;}
+.summary-divider{border-top:1px solid var(--border); margin:12px 0;}
+.summary-row.total{font-size:16px;}
+.summary-row.total dd{font-size:20px; font-family:var(--serif); font-weight:600;}
+
+/* ---------- Continue ---------- */
+.btn-continue{
+  width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+  background:var(--btn); color:#fff; padding:17px; font-size:14.5px; font-weight:500;
+  letter-spacing:0.02em; transition:background .25s ease, opacity .25s ease;
+}
+.btn-continue:hover:not(:disabled){background:var(--btn-hover);}
+.btn-continue:disabled{opacity:.4; cursor:not-allowed;}
+.btn-continue .arrow{transition:transform .2s ease;}
+.btn-continue:hover:not(:disabled) .arrow{transform:translateX(4px);}
+.continue-hint{text-align:center; font-size:12.5px; color:var(--text-secondary); margin-top:10px;}
+
+/* ============================================================
+   RESPONSIVE — phones and small tablets (<=768px)
+
+   Desktop is the reference design and is not touched: every rule
+   below sits inside a media query, and none of them change the
+   frame width percentages, colours, fonts or proportions that
+   define the size-preview / Close-up composition.
+
+   The one thing that genuinely does not scale on its own is the
+   FIXED PIXEL inset -- .preview-stage padding:40px and
+   .frame-mock padding:20px/32px. Every other preview dimension is
+   a percentage, so on a narrow screen those fixed values made the
+   moulding proportionally far thicker and squeezed the photo. The
+   fix is to express the same insets as the equivalent percentages
+   so the identical composition simply scales down.
+
+   Percentage padding resolves against the containing block's
+   width, so these are the desktop ratios exactly:
+     stage   40 / 530 = 7.55%   (stage width at desktop)
+     frame   20 / 450 = 4.44%   (stage content box = 530 - 2*40)
+     studio  32 / 450 = 7.11%
+   ============================================================ */
+
+@media (max-width:767px){
+  .container{padding:0 16px;}
+  .configurator{padding:28px 0 64px;}
+  .config-grid{gap:32px;}
+  .nav-inner{height:60px;}
+  .logo{font-size:21px;}
+
+  /* Same insets as desktop, expressed proportionally so the size-preview /
+     Close-up composition scales instead of being squeezed. */
+  .preview-stage{padding:7.55%; margin-bottom:16px;}
+  .frame-mock{padding:4.44%;}
+  .frame-mock[data-frame="studio"]{padding:7.11%;}
+
+  /* Size-preview assets already contain their own frame; keep the photo
+     overlay aligned on mobile too. */
+  .frame-mock[data-real-frame]{padding:0;}
+
+  .preview-scene-label{top:10px; left:10px; font-size:10px; padding:5px 8px;}
+
+  /* Close-up control: keep the single button compact and touch-friendly. */
+  .mode-switch{gap:4px; padding:3px;}
+  .mode-btn{padding:14px 4px; font-size:12.5px;}
+
+  /* Stacked so the placement copy is not squeezed into a sliver. */
+  .placement-panel{flex-direction:column; align-items:flex-start; gap:3px; padding:12px 14px;}
+
+  .upload-drop{gap:12px; padding:16px 14px;}
+  .upload-icon{width:38px; height:38px; font-size:18px;}
+
+  /* 36px swatches were below the 44px touch minimum. */
+  .colour-options{gap:16px;}
+  .colour-option{width:44px; height:44px;}
+
+  .size-options{gap:8px;}
+  .size-option{padding:13px 6px;}
+
+  .qty-control button{width:46px; height:46px;}
+  .qty-control span{width:50px;}
+
+  .order-summary{padding:20px 17px;}
+
+  /* Hover lift is meaningless on touch and leaves cards stuck raised. */
+  .frame-option:hover, .colour-option:hover{transform:none;}
+
+  /* --- Selected state, mobile ---
+     A 1px border shift is easy to miss at arm's length on a phone. An
+     inset ring reads clearly without changing the box model, so nothing
+     reflows when the selection moves. Same ink, same palette. */
+  .frame-option.active, .size-option.active{
+    box-shadow:inset 0 0 0 2px var(--text);
+  }
+
+  /* --- Uploaded state, mobile ---
+     Same padding and same height as the empty state, so accepting a photo
+     never shifts the layout underneath it. */
+  .upload-drop.has-photo{
+    border-style:solid; border-color:var(--success);
+    background:rgba(46,107,62,0.04);
+  }
+  .upload-drop.has-photo .upload-icon{
+    background:var(--success); color:#fff; border-color:var(--success);
+  }
+  .upload-drop.has-photo .upload-text strong{color:var(--success);}
+}
+
+/* --- Narrow phones (<=360px) --- */
+@media (max-width:360px){
+  .container{padding:0 13px;}
+
+  /* Two frame cards side by side leave ~110px of usable width here,
+     which is not enough for the name, description and price. */
+  .frame-options{grid-template-columns:1fr;}
+
+  .mode-btn{font-size:11.5px; padding:14px 2px; letter-spacing:-0.01em;}
+  .size-options{gap:6px;}
+  .size-option{padding:12px 3px;}
+  .so-dim{font-size:11px; letter-spacing:-0.02em;}
+  .colour-options{gap:12px;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:0.01ms !important; animation-duration:0.01ms !important;}
+}

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arshan Frame — Framed for what matters</title>
+<meta name="description" content="Upload your favourite photo and see it, instantly, inside a frame worth keeping forever.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --bg-secondary:#F8F8F6;
+    --card:#EFEFEF;
+    --text:#111111;
+    --text-secondary:#666666;
+    --border:#D9D9D9;
+    --btn:#1A1A1A;
+    --btn-hover:#333333;
+    --serif:'Cormorant Garamond', serif;
+    --sans:'Inter', sans-serif;
+    --ease:cubic-bezier(.4,0,.2,1);
+    --shadow-sm:0 2px 10px -4px rgba(0,0,0,0.08);
+    --shadow-md:0 16px 40px -18px rgba(0,0,0,0.16);
+    --shadow-lg:0 32px 70px -24px rgba(0,0,0,0.26);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  ul{list-style:none;}
+
+  :focus-visible{outline:2px solid var(--text); outline-offset:3px;}
+
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  h1,h2,h3{font-family:var(--serif); font-weight:500; letter-spacing:0.01em;}
+
+  .eyebrow{
+    font-family:var(--sans);
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--text-secondary);
+    font-weight:500;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:15px 30px;
+    font-size:14px;
+    letter-spacing:0.03em;
+    font-weight:500;
+    border-radius:2px;
+    transition:background .3s var(--ease), color .3s var(--ease), transform .2s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+  }
+  .btn-primary{background:var(--btn); color:#fff;}
+  .btn-primary:hover{background:var(--btn-hover); transform:translateY(-2px); box-shadow:var(--shadow-md);}
+  .btn-primary:active{transform:translateY(0); box-shadow:var(--shadow-sm);}
+  .btn-outline{border:1px solid var(--text); color:var(--text);}
+  .btn-outline:hover{background:var(--text); color:#fff; transform:translateY(-2px); box-shadow:var(--shadow-sm);}
+  .btn-outline:active{transform:translateY(0);}
+
+  /* ---------- Navbar ---------- */
+  header.nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  header.nav.scrolled{border-bottom-color:var(--border);}
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height:76px;
+  }
+  .logo{
+    font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:0.02em;
+  }
+  .nav-links{display:flex; gap:36px; align-items:center;}
+  .nav-links a{font-size:14px; color:var(--text); position:relative; padding:4px 0;}
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--text);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{display:flex; gap:14px;}
+  .nav-cta .btn{padding:11px 22px; font-size:13px;}
+  .nav-toggle{display:none;}
+
+  /* "Arshan Frame" is wider than the previous wordmark, so on narrow
+     phones it wrapped to two lines beside the nav CTA. Kept on one line
+     and scaled down to fit. Desktop sizing is unchanged. */
+  @media (max-width:520px){
+    .logo{font-size:21px; white-space:nowrap;}
+    .nav-cta .btn{padding:10px 15px; font-size:12px; white-space:nowrap;}
+  }
+  @media (max-width:360px){
+    .logo{font-size:18px;}
+    .nav-cta .btn{padding:9px 11px; font-size:11.5px;}
+  }
+
+  @media (max-width:860px){
+    .nav-cta .btn-outline{display:none;}
+    /* Logo is the home link and the nav CTA is a primary action; both
+       sat under 44px. Header height is unchanged. */
+    .logo{display:inline-flex; align-items:center; min-height:44px;}
+    .nav-cta .btn{min-height:44px; padding-top:0; padding-bottom:0; line-height:44px;}
+    /* Bars stay 22x16 visually; the 44px box is only the touch target. */
+    .nav-toggle{
+      display:block; position:relative; width:44px; height:44px;
+      flex:0 0 44px; margin-right:-10px; background:none; border:0; cursor:pointer;
+    }
+    .nav-toggle span{
+      position:absolute; left:11px; width:22px; height:1.5px; background:var(--text);
+      transition:transform .25s var(--ease), opacity .2s var(--ease);
+    }
+    .nav-toggle span:nth-child(1){top:14px;}
+    .nav-toggle span:nth-child(2){top:21px;}
+    .nav-toggle span:nth-child(3){top:28px;}
+    .nav-toggle.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .nav-toggle.is-open span:nth-child(2){opacity:0;}
+    .nav-toggle.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+    /* The links were display:none with nothing to replace them, so Frames /
+       How it works / Live preview / FAQ were unreachable on every phone.
+       Same links, now in a panel under the fixed header. */
+    .nav-links{
+      display:block; position:absolute; top:100%; left:0; right:0;
+      background:var(--bg); border-bottom:1px solid var(--border);
+      padding:6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+      padding-left:max(24px, env(safe-area-inset-left, 0px));
+      padding-right:max(24px, env(safe-area-inset-right, 0px));
+      gap:0;
+      opacity:0; visibility:hidden; transform:translateY(-8px);
+      transition:opacity .22s var(--ease), transform .22s var(--ease), visibility .22s;
+    }
+    .nav-links.is-open{opacity:1; visibility:visible; transform:translateY(0);}
+    .nav-links a{
+      display:flex; align-items:center; min-height:48px;
+      font-size:15px; color:var(--text);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-links a:last-child{border-bottom:0;}
+    .nav-links a::after{content:none;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:180px 0 116px;
+    background:var(--bg-secondary);
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center;
+  }
+  .hero-copy .eyebrow{margin-bottom:22px; display:block;}
+  .hero-copy h1{
+    font-size:clamp(38px, 5vw, 68px);
+    line-height:1.06;
+    margin-bottom:26px;
+    max-width:11ch;
+    letter-spacing:0.005em;
+  }
+  .hero-copy p{
+    color:var(--text-secondary);
+    font-size:17.5px;
+    max-width:42ch;
+    margin-bottom:40px;
+  }
+  .hero-actions{display:flex; gap:16px; flex-wrap:wrap;}
+
+  /* Signature element: frame preview swap */
+  .frame-stage{
+    position:relative;
+    aspect-ratio:4/5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .frame-mock{
+    position:relative;
+    width:78%;
+    aspect-ratio:4/5;
+    background:#fff;
+    padding:22px;
+    box-shadow:var(--shadow-lg), 0 2px 0 rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.06);
+    transition:padding .5s var(--ease), background .5s var(--ease), box-shadow .5s var(--ease);
+  }
+  .frame-mock.walnut{background:#3b2a20;}
+  .frame-mock.oak{background:#c9a978;}
+  .frame-mock.black{background:#161616;}
+  .frame-photo-wrap{
+    position:relative; width:100%; height:100%; overflow:hidden; background:#ddd;
+  }
+  .frame-photo{
+    width:100%; height:100%; object-fit:cover;
+    opacity:0; position:absolute; inset:0;
+    transition:opacity .9s ease;
+  }
+  .frame-photo.active{opacity:1;}
+  .frame-caption{
+    position:absolute; bottom:-34px; left:0; right:0;
+    text-align:center; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-secondary);
+  }
+  .frame-dots{
+    position:absolute; bottom:-64px; left:0; right:0;
+    display:flex; justify-content:center; gap:8px;
+  }
+  .frame-dots button{
+    width:6px; height:6px; border-radius:50%; background:var(--border);
+    transition:background .3s ease, transform .3s ease;
+  }
+  .frame-dots button.active{background:var(--text); transform:scale(1.3);}
+
+  /* Mobile: 6px dots are far below a usable tap target. The dot keeps its
+     size; a transparent 44px pad around it does the catching. */
+  @media (max-width:860px){
+    .frame-dots{gap:0;}
+    .frame-dots button{
+      width:44px; height:44px; border-radius:0; background:none;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .frame-dots button::before{
+      content:''; width:6px; height:6px; border-radius:50%;
+      background:var(--border); transition:background .3s ease, transform .3s ease;
+    }
+    .frame-dots button.active{background:none; transform:none;}
+    .frame-dots button.active::before{background:var(--text); transform:scale(1.3);}
+  }
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr; gap:56px;}
+    .hero{padding-top:130px;}
+  }
+
+  /* ---------- Section shell ---------- */
+  section{padding:128px 0;}
+  .section-head{max-width:640px; margin-bottom:64px;}
+  .section-head.center{margin-left:auto; margin-right:auto; text-align:center;}
+  .section-head .eyebrow{margin-bottom:14px; display:block;}
+  .section-head h2{font-size:clamp(30px,4vw,44px); line-height:1.15;}
+  .section-head p{color:var(--text-secondary); margin-top:14px; font-size:16px;}
+
+  /* ---------- Featured Frames ---------- */
+  .frames-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:32px;
+  }
+  .frame-card{
+    background:var(--card);
+    padding:48px 40px;
+    display:flex; flex-direction:column; gap:20px;
+    border-radius:2px;
+    transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .frame-card:hover{transform:translateY(-8px); box-shadow:var(--shadow-lg);}
+  .frame-card-visual{
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+  }
+  .frame-card-visual img{width:70%; box-shadow:var(--shadow-md); transition:transform .4s var(--ease);}
+  .frame-card:hover .frame-card-visual img{transform:translateY(-4px) scale(1.02);}
+  .frame-card h3{font-size:26px;}
+  .frame-card .swatches{display:flex; gap:8px; margin-top:4px;}
+  .swatch{width:20px; height:20px; border-radius:50%; border:1px solid rgba(0,0,0,0.1);}
+  .frame-card .price{font-size:14px; color:var(--text-secondary); margin-top:auto;}
+  .frame-card .price strong{color:var(--text); font-size:16px;}
+
+  @media (max-width:760px){ .frames-grid{grid-template-columns:1fr;} }
+
+  /* ---------- How it works ---------- */
+  .steps{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border-top:1px solid var(--border);
+  }
+  .step{
+    padding:36px 28px 0;
+    border-right:1px solid var(--border);
+  }
+  .step:last-child{border-right:none;}
+  .step .num{font-family:var(--serif); font-size:38px; color:var(--text-secondary); opacity:.5;}
+  .step h3{font-size:19px; margin:14px 0 10px; font-weight:600; font-family:var(--sans);}
+  .step p{color:var(--text-secondary); font-size:14.5px;}
+
+  @media (max-width:860px){
+    .steps{grid-template-columns:1fr 1fr;}
+    .step{border-right:none; border-bottom:1px solid var(--border); padding-bottom:28px; margin-bottom:8px;}
+  }
+  @media (max-width:520px){ .steps{grid-template-columns:1fr;} }
+
+  /* ---------- Live preview showcase ---------- */
+  .showcase{background:var(--bg-secondary);}
+  .showcase-inner{
+    display:grid; grid-template-columns:1fr 1.15fr; gap:60px; align-items:center;
+  }
+  .scene-tabs{display:flex; flex-direction:column; gap:2px;}
+  .scene-tab{
+    text-align:left; padding:20px 4px; border-bottom:1px solid var(--border);
+    display:flex; align-items:baseline; gap:14px;
+  }
+  .scene-tab .t-num{font-family:var(--serif); font-size:15px; color:var(--text-secondary);}
+  .scene-tab .t-label{font-family:var(--serif); font-size:22px; transition:color .2s ease;}
+  .scene-tab .t-desc{display:none;}
+  .scene-tab[aria-selected="true"] .t-label{color:var(--text); font-style:italic;}
+  .scene-tab[aria-selected="true"] .t-desc{display:block; font-size:14px; color:var(--text-secondary); margin-top:6px; max-width:34ch;}
+  .scene-tab[aria-selected="true"]{}
+  .scene-visual{
+    aspect-ratio:4/3; background:#e5e5e0; position:relative; overflow:hidden;
+  }
+  .scene-visual img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition:opacity .6s ease;
+  }
+  .scene-visual img.active{opacity:1;}
+
+  @media (max-width:860px){ .showcase-inner{grid-template-columns:1fr;} }
+
+  /* ---------- Why choose us ---------- */
+  .why-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:28px;
+  }
+  .why-item{padding:8px 4px;}
+  .why-item .mark{
+    font-family:var(--serif); font-style:italic; font-size:32px; margin-bottom:16px; display:block;
+  }
+  .why-item h3{font-size:17px; font-weight:600; font-family:var(--sans); margin-bottom:8px;}
+  .why-item p{font-size:14px; color:var(--text-secondary);}
+  @media (max-width:860px){ .why-grid{grid-template-columns:1fr 1fr;} }
+  @media (max-width:520px){ .why-grid{grid-template-columns:1fr;} }
+
+  /* ---------- Testimonials ---------- */
+  .testi-track{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
+  }
+  .testi-card{
+    background:var(--bg-secondary); padding:40px 32px; border:1px solid var(--border); border-radius:2px;
+    transition:box-shadow .35s var(--ease), transform .35s var(--ease);
+  }
+  .testi-card:hover{box-shadow:var(--shadow-md); transform:translateY(-4px);}
+  .testi-card p.quote{font-family:var(--serif); font-size:19px; line-height:1.5; font-style:italic; margin-bottom:20px;}
+  .testi-card .who{font-size:13px; color:var(--text-secondary);}
+  @media (max-width:860px){ .testi-track{grid-template-columns:1fr;} }
+
+  /* ---------- FAQ ---------- */
+  .faq-list{max-width:760px; margin:0 auto; border-top:1px solid var(--border);}
+  .faq-item{border-bottom:1px solid var(--border);}
+  .faq-q{
+    width:100%; display:flex; justify-content:space-between; align-items:center;
+    padding:26px 4px; font-family:var(--serif); font-size:19px; text-align:left;
+    transition:color .2s var(--ease);
+  }
+  .faq-q:hover{color:var(--text-secondary);}
+  .faq-q .plus{font-size:22px; font-weight:300; transition:transform .3s ease; color:var(--text-secondary);}
+  .faq-item.open .faq-q .plus{transform:rotate(45deg);}
+  .faq-a{
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+  }
+  .faq-a p{padding:0 4px 26px; color:var(--text-secondary); font-size:15px; max-width:60ch;}
+
+  /* ---------- Final CTA ---------- */
+  .final-cta{
+    background:var(--btn); color:#fff; text-align:center;
+  }
+  .final-cta h2{color:#fff; font-size:clamp(30px,4.5vw,48px); max-width:16ch; margin:0 auto 28px;}
+  .final-cta .btn-primary{background:#fff; color:var(--btn);}
+  .final-cta .btn-primary:hover{background:#eee;}
+
+  /* ---------- Footer ---------- */
+  footer{padding:64px 0 32px; border-top:1px solid var(--border);}
+  .footer-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:48px;
+  }
+  .footer-brand .logo{margin-bottom:14px;}
+  .footer-brand p{color:var(--text-secondary); font-size:14px; max-width:32ch;}
+  .footer-col h4{font-size:13px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:18px; color:var(--text-secondary);}
+  .footer-col ul li{margin-bottom:10px; font-size:14.5px;}
+  .footer-col ul li a:hover{color:var(--text-secondary);}
+
+  /* Mobile: footer links were 16px tall rows. The link fills a 44px row
+     instead, which also gives the columns comfortable rhythm. Desktop
+     spacing is unchanged. */
+  @media (max-width:860px){
+    .footer-col ul li{margin-bottom:0;}
+    .footer-col ul li a{display:flex; align-items:center; min-height:44px;}
+  }
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center; padding-top:28px; border-top:1px solid var(--border);
+    font-size:12.5px; color:var(--text-secondary); flex-wrap:wrap; gap:10px;
+  }
+  @media (max-width:760px){ .footer-grid{grid-template-columns:1fr 1fr; gap:32px;} }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:0.01ms !important; animation-duration:0.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">Arshan Frame</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#frames">Frames</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#preview">Live preview</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#frames" class="btn btn-outline">Browse Frames</a>
+      <a href="configurator.html" class="btn btn-primary">Upload Your Photo</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Custom framed prints</span>
+      <h1>Your memories deserve more than a folder.</h1>
+      <p>Transform your favourite moments into timeless framed memories. Upload a photo and watch it come to life inside a frame, before you spend a rupee.</p>
+      <div class="hero-actions">
+        <a href="configurator.html" class="btn btn-primary">Upload Your Photo</a>
+        <a href="#frames" class="btn btn-outline">Browse Frames</a>
+      </div>
+    </div>
+    <div class="frame-stage">
+      <div class="frame-mock walnut" id="heroFrame">
+        <div class="frame-photo-wrap">
+          <img class="frame-photo active" src="https://images.unsplash.com/photo-1476234251651-f353703a034d?w=700&q=80" alt="">
+          <img class="frame-photo" src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=700&q=80" alt="">
+          <img class="frame-photo" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=700&q=80" alt="">
+        </div>
+      </div>
+      <span class="frame-caption" id="frameCaption">Walnut &middot; Medium</span>
+      <div class="frame-dots" id="frameDots">
+        <button class="active" aria-label="Show walnut frame"></button>
+        <button aria-label="Show oak frame"></button>
+        <button aria-label="Show black frame"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="frames">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Featured frames</span>
+      <h2>Two frames. Made to last.</h2>
+      <p>We kept the range small on purpose &mdash; every finish, size and price is chosen so there's nothing to get wrong.</p>
+    </div>
+    <div class="frames-grid">
+      <a class="frame-card" href="configurator.html?frame=gallery">
+        <div class="frame-card-visual">
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&q=80" alt="The Gallery frame with a landscape photo">
+        </div>
+        <h3>The Gallery</h3>
+        <p style="color:var(--text-secondary); font-size:14px;">Slim profile, solid wood. Our most-ordered frame for wall displays.</p>
+        <div class="swatches">
+          <span class="swatch" style="background:#3b2a20;"></span>
+          <span class="swatch" style="background:#c9a978;"></span>
+          <span class="swatch" style="background:#161616;"></span>
+        </div>
+        <div class="price">From <strong>₹899</strong> &middot; 3 sizes</div>
+      </a>
+      <a class="frame-card" href="configurator.html?frame=studio">
+        <div class="frame-card-visual">
+          <img src="https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=500&q=80" alt="The Studio frame with a portrait photo">
+        </div>
+        <h3>The Studio</h3>
+        <p style="color:var(--text-secondary); font-size:14px;">Deeper box frame with a matte border, for a gallery-wall feel.</p>
+        <div class="swatches">
+          <span class="swatch" style="background:#3b2a20;"></span>
+          <span class="swatch" style="background:#c9a978;"></span>
+          <span class="swatch" style="background:#161616;"></span>
+        </div>
+        <div class="price">From <strong>₹1,299</strong> &middot; 3 sizes</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>From photo to frame in four steps.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="num">01</span>
+        <h3>Choose a frame</h3>
+        <p>Pick from The Gallery or The Studio, then a colour and size.</p>
+      </div>
+      <div class="step">
+        <span class="num">02</span>
+        <h3>Upload your photo</h3>
+        <p>JPG, PNG or WEBP, up to 10MB. No cropping tools to fight with.</p>
+      </div>
+      <div class="step">
+        <span class="num">03</span>
+        <h3>See it live</h3>
+        <p>Your photo appears inside the frame instantly, on a wall, table or desk.</p>
+      </div>
+      <div class="step">
+        <span class="num">04</span>
+        <h3>We frame and ship</h3>
+        <p>Pay securely, and we print, frame and pack it by hand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="preview" class="showcase">
+  <div class="container showcase-inner">
+    <div>
+      <span class="eyebrow">Live preview</span>
+      <h2 style="font-size:clamp(28px,4vw,38px); margin-bottom:24px;">See it before you buy it.</h2>
+      <div class="scene-tabs" role="tablist" aria-label="Preview scenes">
+        <button class="scene-tab" role="tab" aria-selected="true" data-scene="0">
+          <span class="t-num">01</span>
+          <span>
+            <span class="t-label">On the wall</span>
+            <span class="t-desc">See exactly how your frame sits above a sofa or hallway console.</span>
+          </span>
+        </button>
+        <button class="scene-tab" role="tab" aria-selected="false" data-scene="1">
+          <span class="t-num">02</span>
+          <span>
+            <span class="t-label">On a table</span>
+            <span class="t-desc">A freestanding view for a bedside table or bookshelf.</span>
+          </span>
+        </button>
+        <button class="scene-tab" role="tab" aria-selected="false" data-scene="2">
+          <span class="t-num">03</span>
+          <span>
+            <span class="t-label">In the living room</span>
+            <span class="t-desc">Preview scale and colour against a full room setting.</span>
+          </span>
+        </button>
+        <button class="scene-tab" role="tab" aria-selected="false" data-scene="3">
+          <span class="t-num">04</span>
+          <span>
+            <span class="t-label">At your workspace</span>
+            <span class="t-desc">A quieter, close-up view for a desk or shelf.</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="scene-visual" id="sceneVisual">
+      <img class="active" src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=900&q=80" alt="Framed photo hanging on a living room wall">
+      <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=900&q=80" alt="Framed photo standing on a table">
+      <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80" alt="Framed photo in a living room setting">
+      <img src="https://images.unsplash.com/photo-1541558869434-2840d308329a?w=900&q=80" alt="Framed photo at a workspace desk">
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head center" style="margin-left:auto;margin-right:auto;">
+      <span class="eyebrow">Why choose us</span>
+      <h2>Built around one job, done well.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <span class="mark">See it first</span>
+        <h3>No guessing</h3>
+        <p>The live preview shows your actual photo in the actual frame before checkout.</p>
+      </div>
+      <div class="why-item">
+        <span class="mark">Solid wood</span>
+        <h3>Built to last</h3>
+        <p>Every frame is solid wood, hand-finished, not printed plastic mouldings.</p>
+      </div>
+      <div class="why-item">
+        <span class="mark">Simple range</span>
+        <h3>Nothing to overthink</h3>
+        <p>Two frames, three colours, three sizes. Every option is a good one.</p>
+      </div>
+      <div class="why-item">
+        <span class="mark">Fair pricing</span>
+        <h3>No surprises</h3>
+        <p>The price you see at checkout is the price you pay. No hidden add-ons.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--bg-secondary);">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">Testimonials</span>
+      <h2>What people frame with us.</h2>
+    </div>
+    <div class="testi-track">
+      <div class="testi-card">
+        <p class="quote">"I could see the photo sitting on my study table before it even shipped. Took the guesswork out completely."</p>
+        <p class="who">Ananya R., Bengaluru</p>
+      </div>
+      <div class="testi-card">
+        <p class="quote">"Ordered The Studio for my parents' anniversary. The wood finish looks far better in person than online."</p>
+        <p class="who">Karthik M., Chennai</p>
+      </div>
+      <div class="testi-card">
+        <p class="quote">"Simple, fast, and the packaging alone felt premium. Will be back for more frames."</p>
+        <p class="who">Priya S., Hyderabad</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head center">
+      <span class="eyebrow">FAQ</span>
+      <h2>Good to know.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q"><span>What photo formats can I upload?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>JPG, JPEG, PNG and WEBP, up to 10MB per file. We recommend the highest resolution photo you have for the sharpest print.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Can I crop or rotate my photo?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>We keep this step simple &mdash; your photo is placed into the frame automatically, without a crop or rotate tool, so the preview you see is exactly what you'll receive.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>How long does delivery take?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Each frame is printed and hand-finished after you order, then packed and shipped. You'll get updates at every stage, from printing to delivery.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>What payment methods do you accept?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>UPI, RuPay, debit and credit cards, net banking and popular wallets, all through a secure checkout.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <h2>Your memories deserve more than a folder.</h2>
+    <a href="configurator.html" class="btn btn-primary">Upload Your Photo</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">Arshan Frame</div>
+        <p>Custom photo frames, made simple. Upload, preview, order.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#frames">The Gallery</a></li>
+          <li><a href="#frames">The Studio</a></li>
+          <li><a href="#preview">Live preview</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Track order</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Shipping policy</a></li>
+          <li><a href="#">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Arshan Frame. All rights reserved.</span>
+      <span>Crafted with Crestiq</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll state
+  const nav = document.getElementById('siteNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 8);
+  });
+
+  // Hero frame swap (colour + photo)
+  const heroFrame = document.getElementById('heroFrame');
+  const heroPhotos = heroFrame.querySelectorAll('.frame-photo');
+  const frameCaption = document.getElementById('frameCaption');
+  const frameDots = document.querySelectorAll('#frameDots button');
+  const frameStates = [
+    { cls: 'walnut', label: 'Walnut &middot; Medium' },
+    { cls: 'oak', label: 'Oak &middot; Medium' },
+    { cls: 'black', label: 'Black &middot; Medium' }
+  ];
+  let frameIndex = 0;
+  function setFrame(i){
+    frameStates.forEach(s => heroFrame.classList.remove(s.cls));
+    heroFrame.classList.add(frameStates[i].cls);
+    frameCaption.innerHTML = frameStates[i].label;
+    heroPhotos.forEach((p, idx) => p.classList.toggle('active', idx === i));
+    frameDots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    frameIndex = i;
+  }
+  frameDots.forEach((d, i) => d.addEventListener('click', () => setFrame(i)));
+  setInterval(() => setFrame((frameIndex + 1) % frameStates.length), 4200);
+
+  // Live preview scene tabs
+  const sceneTabs = document.querySelectorAll('.scene-tab');
+  const sceneImgs = document.querySelectorAll('#sceneVisual img');
+  sceneTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      sceneTabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      const idx = Number(tab.dataset.scene);
+      sceneImgs.forEach((img, i) => img.classList.toggle('active', i === idx));
+    });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(openItem => {
+        if (openItem !== item) {
+          openItem.classList.remove('open');
+          openItem.querySelector('.faq-a').style.maxHeight = null;
+        }
+      });
+      item.classList.toggle('open', !isOpen);
+      a.style.maxHeight = !isOpen ? a.scrollHeight + 'px' : null;
+    });
+  });
+
+  // Scroll reveal
+  const revealTargets = document.querySelectorAll('.frame-card, .step, .why-item, .testi-card');
+  revealTargets.forEach(el => { el.style.opacity = 0; el.style.transform = 'translateY(16px)'; el.style.transition = 'opacity .6s ease, transform .6s ease'; });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealTargets.forEach(el => io.observe(el));
+</script>
+
+  <script src="nav.js"></script>
+</body>
+</html>

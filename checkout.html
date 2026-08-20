@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Cadre</title>
+<meta name="description" content="Review your order before payment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="configurator.css">
+<link rel="stylesheet" href="order-flow.css">
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">Cadre</a>
+    <nav class="nav-links">
+      <a href="index.html#frames">Frames</a>
+      <a href="index.html#how-it-works">How it works</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="nav-progress" aria-hidden="true">
+      <span class="step-dot done"></span>
+      <span class="step-dot done"></span>
+      <span class="step-dot done"></span>
+      <span class="step-dot active"></span>
+    </div>
+  </div>
+</header>
+
+<main class="order-flow">
+  <div class="container flow-grid">
+
+    <div class="flow-main">
+      <span class="eyebrow">Step 4 of 4</span>
+      <h1>Review &amp; pay</h1>
+      <p class="config-sub">Please check everything below before you proceed to payment.</p>
+
+      <section class="checkout-block" id="checkoutOrderBlock">
+        <div class="checkout-heading-row">
+          <h2>Your frame</h2>
+          <a href="configurator.html" class="edit-link" id="editOrderBtn">Edit order</a>
+        </div>
+        <div class="checkout-order" id="checkoutOrder">
+          <div class="checkout-photo">
+            <img id="checkoutPhoto" alt="Your uploaded photo" hidden>
+            <div class="checkout-photo-placeholder" id="checkoutPhotoPlaceholder">No photo</div>
+          </div>
+          <dl class="checkout-specs" id="checkoutSpecs"></dl>
+        </div>
+      </section>
+
+      <section class="checkout-block">
+        <div class="checkout-heading-row">
+          <h2>Delivery details</h2>
+          <a href="customer-details.html" class="edit-link">Edit details</a>
+        </div>
+        <dl class="checkout-specs" id="checkoutCustomer"></dl>
+      </section>
+
+      <section class="checkout-block payment-block">
+        <h2>Payment</h2>
+        <p class="config-sub" style="margin-bottom:20px;">Secure payments are handled by Cashfree. You'll be redirected to complete payment safely.</p>
+        <div class="trust-badges" aria-hidden="true">
+          <span class="trust-badge">256-bit SSL</span>
+          <span class="trust-badge">Secure checkout</span>
+          <span class="trust-badge">Handmade in India</span>
+        </div>
+        <button type="button" class="btn-continue" id="payBtn">
+          <span>Proceed to Secure Payment</span>
+          <span class="arrow">&rarr;</span>
+        </button>
+        <p class="continue-hint">Payment integration coming soon &mdash; this is a placeholder step.</p>
+      </section>
+    </div>
+
+    <aside class="flow-side">
+      <div class="order-summary" id="finalSummary">
+        <h2>Order summary</h2>
+        <div id="finalSummaryBody">
+          <p class="empty-note">No order found. <a href="configurator.html">Start building your frame</a>.</p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<script src="order-flow.js"></script>
+<script src="checkout.js"></script>
+</body>
+</html>
